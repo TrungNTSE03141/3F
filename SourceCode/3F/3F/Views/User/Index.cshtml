@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+<button onclick="ViewProfile()">View Profile</button>
+
+<p id="demo"></p>
+
+<script>
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        x.innerHTML = "Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude;
+    }
+
+    function ViewProfile() {
+        $.ajax({
+            url: '@Url.Action("ProfileDetails")', // to get the right path to controller from TableRoutes of Asp.Net MVC
+            dataType: "json", //to work with json format
+            type: "GET", //to do a post request
+            success: function (data) {
+                // data is your result from controller
+                if (data.success) {
+                    alert("12312312");
+                }
+            }
+        });
+        alert("Hello World2!");
+        alert("Hello World!");
+    }
+
+    $('#btnViewProfile').on("click", function () {
+        //$.ajax({
+        //    url: 'User/ProfileDetails/', // to get the right path to controller from TableRoutes of Asp.Net MVC
+        //    dataType: "json", //to work with json format
+        //    type: "GET", //to do a post request
+        //    data: {}, // here you can pass arguments to your request if you need
+        //    success: function (data) {
+        //        // data is your result from controller
+        //        if (data.success) {
+        //            alert(data.message);
+        //        }
+        //    }
+
+        //});
+        getLocation();
+    });
+</script>
+
+
+
