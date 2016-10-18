@@ -1,0 +1,345 @@
+﻿@using _3F.Utils;
+@model _3F.Models.UserProfileView
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" media="all" href="~/Content/style_profile.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+<link rel="stylesheet" href="~/Assets/css/bootstrap.css" />
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>*@
+<script src="~/Assets/js/jquery.min.js"></script>
+@*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="~/Scripts/script.js"></script>
+@*<script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>*@
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO2zT7QkEE1-24u5JYwtTvGj36B20Wu38&libraries=places&sensor=false"></script>
+@*<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO2zT7QkEE1-24u5JYwtTvGj36B20Wu38&callback=initMap"></script>*@
+
+<body onload="getLocation(); InitializeMap()">
+    <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet" media="screen">
+    <div class="container">
+        <div class="row user-menu-container square">
+            <div class="col-md-7 user-details">
+                <div class="row coralbg white" style="height:330px;">
+                    <div class="col-md-6 no-pad">
+                        <div class="user-pad">
+                            <h3>@Model.fullName</h3>
+                            <h4 class="white"><i class="fa fa-check-circle-o"></i>&nbsp;@Model.address</h4>
+                            <h4 class="white"><i class="fa fa-facebook"></i>&nbsp;@Model.username</h4>
+                            <h4 class="white"><i class="fa fa-check-circle-o"></i><span id="txtYourLocation">Your Location</span></h4>
+                            @if (ViewBag.Profile == CONST.PROFILE.MY_PROFILE)
+                            {
+                                <button type="button" class="btn btn-labeled btn-info">
+                                    <span class="btn-label"><i class="fa fa-pencil"></i></span>
+                                    @Html.ActionLink("Update", "Edit", null, htmlAttributes: new { @style = "text-decoration: none; color: white; font-size: 15px;" })
+                                </button>
+                            }
+                            else
+                            {
+                                if (ViewBag.Relationship == CONST.FRIEND_OPTIONS.Friends)
+                                {
+                                    <button type="button" style="background-color:cornflowerblue">
+                                        @Html.ActionLink("Friends", "#", null, htmlAttributes: new { @style = "text-decoration: none; color: white; font-size: 15px;" })
+                                    </button>
+                                }
+                                else if (ViewBag.Relationship == CONST.FRIEND_OPTIONS.Confirm)
+                                {
+                                    <button type="button" style="background-color:cornflowerblue">
+                                        @Html.ActionLink("Confirm", "#", null, htmlAttributes: new { @style = "text-decoration: none; color: white; font-size: 15px;" })
+                                    </button><span>&nbsp;</span>
+                                    <button type="button" style="background-color:gray">
+                                        @Html.ActionLink("Delete Request", "#", null, htmlAttributes: new { @style = "text-decoration: none; color: white; font-size: 15px;" })
+                                    </button>
+                                }
+                                else if (ViewBag.Relationship == CONST.FRIEND_OPTIONS.Request)
+                                {
+                                    <button type="button" style="background-color:cornflowerblue">
+                                        @Html.ActionLink("Friend Request Sent", "#", null, htmlAttributes: new { @style = "text-decoration: none; color: white; font-size: 15px;" })
+                                    </button>
+                                }
+                                else if (ViewBag.Relationship == CONST.FRIEND_OPTIONS.None)
+                                {
+                                    <button type="button" style="background-color:cornflowerblue" onclick="addFriend()">
+                                        @*@Html.ActionLink("Add Friend", "RequestFriend", "Relationship", new { userId = Model.Id}, htmlAttributes: new { id = "btnRelationship", @style = "text-decoration: none; color: white; font-size: 15px;" })*@
+                                        <span id="btnRelationship" style="text-decoration: none; color: white; font-size: 15px;">Add Friend</span>
+                                    </button>
+                                }
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-pad">
+                        <div class="user-image">
+                            <img src="https://farm7.staticflickr.com/6163/6195546981_200e87ddaf_b.jpg" class="img-responsive thumbnail">
+                            @*<img src="~/Content/images/avatar.png" class="img-responsive thumbnail avatar img-circle" style="max-width:100%; max-height:100%;">*@
+                        </div>
+                    </div>
+                </div>
+                <div class="row overview">
+                    <div class="col-md-4 user-pad text-center">
+                        <h3>FOLLOWERS</h3>
+                        <h4>2,784</h4>
+                    </div>
+                    <div class="col-md-4 user-pad text-center">
+                        <h3>FOLLOWING</h3>
+                        <h4>456</h4>
+                    </div>
+                    <div class="col-md-4 user-pad text-center">
+                        <h3>PINED</h3>
+                        <h4>4,901</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 user-menu-btns">
+                <div class="btn-group-vertical square" id="responsive">
+                    <a href="#" class="btn btn-block btn-default active">
+                        <i class="fa fa-bell-o fa-3x"></i>
+                    </a>
+                    <a href="#" class="btn btn-default">
+                        <i class="fa fa-envelope-o fa-3x"></i>
+                    </a>
+                    <a href="#" class="btn btn-default">
+                        <i class="fa fa-laptop fa-3x"></i>
+                    </a>
+                    <a href="#" class="btn btn-default">
+                        <i class="fa fa-cloud-upload fa-3x"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 user-menu user-pad">
+                <div class="user-menu-content active">
+                    <h4>
+                        Your current location
+                    </h4>
+                    <div id="mapShowLocation" style="height:275px;">Google Map show your location here</div>
+                    @*<ul class="user-menu-list">
+                            <li>
+                                <h4><i class="fa fa-user coral"></i> Roselynn Smith followed you.</h4>
+                            </li>
+                            <li>
+                                <h4><i class="fa fa-heart-o coral"></i> Jonathan Hawkins followed you.</h4>
+                            </li>
+                            <li>
+                                <h4><i class="fa fa-paper-plane-o coral"></i> Gracie Jenkins followed you.</h4>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-labeled btn-success" href="#">
+                                    <span class="btn-label"><i class="fa fa-bell-o"></i></span>View all activity
+                                </button>
+                            </li>
+                        </ul>*@
+                </div>
+                <div class="user-menu-content">
+                    <h3>
+                        Your Inbox
+                    </h3>
+                    <ul class="user-menu-list">
+                        <li>
+                            <h4>From Roselyn Smith <small class="coral"><strong>NEW</strong> <i class="fa fa-clock-o"></i> 7:42 A.M.</small></h4>
+                        </li>
+                        <li>
+                            <h4>From Jonathan Hawkins <small class="coral"><i class="fa fa-clock-o"></i> 10:42 A.M.</small></h4>
+                        </li>
+                        <li>
+                            <h4>From Georgia Jennings <small class="coral"><i class="fa fa-clock-o"></i> 10:42 A.M.</small></h4>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-labeled btn-danger" href="#">
+                                <span class="btn-label"><i class="fa fa-envelope-o"></i></span>View All Messages
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="user-menu-content">
+                    <h3>
+                        Trending
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="view">
+                                <div class="caption">
+                                    <p>47LabsDesign</p>
+                                    <a href="" rel="tooltip" title="Appreciate"><span class="fa fa-heart-o fa-2x"></span></a>
+                                    <a href="" rel="tooltip" title="View"><span class="fa fa-search fa-2x"></span></a>
+                                </div>
+                                <img src="http://24.media.tumblr.com/273167b30c7af4437dcf14ed894b0768/tumblr_n5waxesawa1st5lhmo1_1280.jpg" class="img-responsive">
+                            </div>
+                            <div class="info">
+                                <p class="small" style="text-overflow: ellipsis">An Awesome Title</p>
+                                <p class="small coral text-right"><i class="fa fa-clock-o"></i> Posted Today | 10:42 A.M.</small>
+                            </div>
+                            <div class="stats turqbg">
+                                <span class="fa fa-heart-o"> <strong>47</strong></span>
+                                <span class="fa fa-eye pull-right"> <strong>137</strong></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="view">
+                                <div class="caption">
+                                    <p>47LabsDesign</p>
+                                    <a href="" rel="tooltip" title="Appreciate"><span class="fa fa-heart-o fa-2x"></span></a>
+                                    <a href="" rel="tooltip" title="View"><span class="fa fa-search fa-2x"></span></a>
+                                </div>
+                                <img src="http://24.media.tumblr.com/282fadab7d782edce9debf3872c00ef1/tumblr_n3tswomqPS1st5lhmo1_1280.jpg" class="img-responsive">
+                            </div>
+                            <div class="info">
+                                <p class="small" style="text-overflow: ellipsis">An Awesome Title</p>
+                                <p class="small coral text-right"><i class="fa fa-clock-o"></i> Posted Today | 10:42 A.M.</small>
+                            </div>
+                            <div class="stats turqbg">
+                                <span class="fa fa-heart-o"> <strong>47</strong></span>
+                                <span class="fa fa-eye pull-right"> <strong>137</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-menu-content">
+                    <h2 class="text-center">
+                        START SHARING
+                    </h2>
+                    <center><i class="fa fa-cloud-upload fa-4x"></i></center>
+                    <div class="share-links">
+                        <center>
+                            <button type="button" class="btn btn-lg btn-labeled btn-success" href="#" style="margin-bottom: 15px; float:left;width:285px;">
+                                <span class="btn-label"><i class="fa fa-bell-o"></i></span>A FINISHED PROJECT
+                            </button>
+                        </center>
+                        <center>
+                            <button type="button" class="btn btn-lg btn-labeled btn-warning" href="#" style="margin-bottom: 15px; float:left;width:285px;">
+                                <span class="btn-label"><i class="fa fa-bell-o"></i></span>A WORK IN PROGRESS
+                            </button>
+                        </center>
+                        <center>
+                            <button type="button" class="btn btn-lg btn-labeled btn-danger" href="#" style="margin-bottom: 15px; float:left; width:285px;">
+                                <a style="text-decoration:none;" onclick="ShareYourLocation()"><span class="btn-label"><i class="fa fa-bell-o"></i></span>Share Your Location</a>
+                            </button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+    </html>
+@*Script Get Your Location*@
+<script>
+        var x = document.getElementById("txtYourLocation");
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        //TrungNT START
+        //Show your location
+        function showPosition(position) {
+            //x.innerHTML = "Latitude: " + position.coords.latitude +
+            //"<br>Longitude: " + position.coords.longitude;
+            //TrungNT Call Webservice through AJAX
+            var url = "http://localhost:52779/3FWebService.asmx";
+            $.ajax({
+                type: "POST",
+                url: url + "/ReverseDecoding",
+                data: JSON.stringify({ longitude: position.coords.longitude, latitude: position.coords.latitude }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccessCall,
+                error: OnErrorCall
+            });
+
+            function OnSuccessCall(response) {
+                x.innerHTML = " You are here: " + response.d;
+            }
+
+            function OnErrorCall(response) {
+                alert("Error");
+            }
+        }
+        //TrungNT END
+
+        //TrungNT START
+        //Using ajax to share your location on system
+        function ShareYourLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(Share);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+
+            function Share(position) {
+                //var userId = @Model.Id.ToString();
+                var userId = "asdjashjdas";
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("TestAJAX", "UserLocation")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { userId: userId, longitude: position.coords.longitude, latitude: position.coords.latitude },
+                    dataType: "json",
+                    success: OnSuccessCall,
+                    error: OnErrorCall
+                });
+
+                function OnSuccessCall(response) {
+                    x.innerHTML = response.d;
+                }
+                function OnErrorCall(response) {
+                    alert("Error");
+                }
+            }
+        }
+        //TrungNT END
+        var isMapsApiLoaded = false;
+        function InitializeMap() {
+            //If google map is loaded then do nothing
+            if (isMapsApiLoaded)
+                return;
+            //Get Your coordinate
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(CreateMarker);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+            //Create marker on goole map
+            function CreateMarker(position) {
+                google.maps.visualRefresh = true;
+                var mapOptions = {
+                    zoom: 17,
+                    center: { lat: position.coords.latitude, lng: position.coords.longitude },
+                    mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
+                };
+                var map = new google.maps.Map(document.getElementById("mapShowLocation"), mapOptions);
+                var maker = new google.maps.Marker({
+                    'position': new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                    'map': map,
+                    'title': "Your are here"
+                });
+                // mapOptions.center = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                // map.setOptions(mapOptions);
+                isMapsApiLoaded = true;
+            }
+        }
+
+
+        //TrungNT AJAX Send request friends START
+
+        function addFriend() {
+            var url = '@Url.Action("RequestFriend", "Relationship", new { userId = Model.Id},null)';
+            $.get(url, null, function (response) {
+                if (response == "True") {
+                    $("#btnRelationship").html("Friends request sent");
+                }
+
+            });
+        }
+
+        //TrungNT AJAX Send request friends START
+
+
+</script>
+
+<script type="text/javascript" src="~/Assets/js/FlashFoodAndFriends_Libs.js"></script>
