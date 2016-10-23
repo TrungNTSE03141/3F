@@ -1,0 +1,26 @@
+﻿
+@using _3F.Utils;
+@{ 
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewPageAdmin</title>
+</head>
+<body>
+    <table>
+        <tr><th>Action</th><th>Link</th></tr>
+        <tr><td>Set permission</td><td><a href="@Url.Action("SetPermission", "User", new { id = 2, role = Utils.ROLE.RestaurantManager }, null)">Link</a></td></tr>
+        <tr><td>Ban User (~Change user status)</td><td><a href="@Url.Action("Ban", "User", new { id = 2 }, null)">Link</a></td></tr>
+        <tr><td>UnBan User (~Change user status)</td><td><a href="@Url.Action("UnBan", "User", new { id = 2 }, null)">Link</a></td></tr>
+        <tr><td>Set post privacy</td><td><a href="@Url.Action("SetUserPostPrivacy", "User", new { datePosted = "10/22/2016 1:58:20 AM", privacy = Utils.PRIVACY.ONLY_ME }, null)">Link</a></td></tr>
+
+    </table>
+
+    <button><a href="#" style="text-decoration:none;">asdasdas</a></button>
+</body>
+</html>

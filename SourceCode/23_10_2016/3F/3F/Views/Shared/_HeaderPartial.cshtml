@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNet.Identity
+
+<div class="header">
+    <div class="container">
+        <div class="top-header">
+            <div class="logo">
+                <a href="@Url.Action("Index","Home",null)"><img src="" class="img-responsive" alt="" />FFood & Friend</a>
+                <p id="usersCount"><label>User Online: </label> updating...</p>
+            </div>
+            <div class="queries">
+                <p>Questions? Call us Toll-free!<span>0974 701 276 </span><label>(11AM to 11PM)</label></p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="menu-bar">
+        <div class="container">
+            <div class="top-menu">
+                <ul>
+                    <li class="active">@Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "" })</li>|
+                    <li>@Html.ActionLink("Popular Restaurants", "Popular", "Restaurant", routeValues: null, htmlAttributes: new { @class = "" })</li>|
+                    <li>@Html.ActionLink("Contact", "Contact", "Home", routeValues: null, htmlAttributes: new { @class = "" })</li>
+                    <div class="clearfix"></div>
+                </ul>
+            </div>
+            <div class="login-section">
+                @if (Request.IsAuthenticated)
+                {
+                    using (Html.BeginForm("Logout", "Authorization", FormMethod.Post, new { id = "logoutForm", @class = "" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <ul>
+                            <li>
+                                @Html.ActionLink("Welcome " + User.Identity.GetUserName() + "", "MyProfile", "User", routeValues: null, htmlAttributes: new { title = "Manage" })
+                            </li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
+                            <div class="clearfix"></div>
+                        </ul>
+                    }
+                }
+                else
+                {
+                    <ul>
+                        <li>@Html.ActionLink("Log in", "Login", "Authorization", routeValues: null, htmlAttributes: new { id = "loginLink" })</li> |
+                        <li>@Html.ActionLink("Register", "Register", "Authorization", routeValues: null, htmlAttributes: new { id = "registerLink" })</li> |
+                        <li><a href="#">Help</a></li>
+                        <div class="clearfix"></div>
+                    </ul>
+                }
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+

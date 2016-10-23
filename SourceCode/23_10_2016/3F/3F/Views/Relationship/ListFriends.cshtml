@@ -1,0 +1,48 @@
+﻿@model _3F.Models.ViewModels.ListFriendViewModels
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ListFriends</title>
+</head>
+<body>
+    <span>List friend's id</span><br>
+    <style>
+        .td {
+            width:500px;
+        }
+
+    </style>
+    <table>
+    @foreach (int id in Model.listFriends)
+    {
+        <tr>
+            <td style="width:100px;">Friend:</td>
+            <td style="width:100px;">@id</td>
+            <td><a href="#">Request Friend</a></td>
+        </tr>
+    }
+    </table>
+    <hr>
+    <table>
+        @foreach(var item in Model.friends)
+        {
+            <tr>
+                <td style="width:100px;">Id:</td>
+                <td style="width:100px;">@item.userId</td>
+                <td style="width:100px;">Friend:</td>
+                <td style="width:100px;">@item.username</td>
+                @if (item.status != null)
+                {
+                    <td><a href="#">Send request friends</a></td>
+                }
+                else
+                {
+                    <td><a href="#">Friends</a></td>
+                }
+            </tr>
+        }
+    </table>
+</body>
+</html>

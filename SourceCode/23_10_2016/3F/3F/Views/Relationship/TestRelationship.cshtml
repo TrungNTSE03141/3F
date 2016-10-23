@@ -1,0 +1,44 @@
+﻿
+@{
+    Layout = null;
+}
+@using _3F.Utils;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TestRelationship</title>
+</head>
+<body>
+    <h3>List Users</h3>
+    <table border="1">
+        <tr><th>User</th><th>Options</th><th>View Profile</th></tr>
+        @foreach (var item in ViewBag.allUsers)
+        {
+            <tr>
+                <td style="width:100px;">@item.username</td>
+                @if (item.status == CONST.FRIEND_OPTIONS.Friends)
+                {
+                    <td style="width:100px;"><a href="@Url.Action("UnFriend","Relationship",new { userId = item.userId },null)">Unfriends</a></td>
+                }
+                else if (item.status == CONST.FRIEND_OPTIONS.Confirm)
+                {
+                    <td style="width:100px;"><a href="@Url.Action("AcceptRequest","Relationship",new { userId = item.userId },null)">Accept request</a></td>
+                    <td style="width:100px;"><a href="@Url.Action("RejectRequest","Relationship",new { userId = item.userId },null)">Reject request</a></td>
+                }
+                else if (item.status == CONST.FRIEND_OPTIONS.Request)
+                {
+                    <td style="width:100px;"><a href="@Url.Action("CancelRequest","Relationship",new { userId = item.userId },null)">Cancel Request</a></td>
+                }
+                else if (item.status == CONST.FRIEND_OPTIONS.None)
+                {
+                    <td style="width:100px;"><a href="@Url.Action("RequestFriend","Relationship",new { userId = item.userId },null)">Add Friends</a></td>
+                }
+                <td style="width:100px;"><a href="@Url.Action("ViewProfile","User",new { id = item.userId },null)">View Profile</a></td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

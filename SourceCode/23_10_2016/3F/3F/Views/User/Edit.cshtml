@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @model _3F.Models.UserEditViewModels
+    <title>Edit Profile</title>
+  <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" media="all" href="style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    @* Script Display image in a folder on your local computer *@
+    <script>
+	function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgAvatar')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <hr>
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-3">
+                <div class="text-center">
+                    <a href="/User/ViewProfile"><img id="imgAvatar" src="~/Content/images/avatar.png" class="avatar img-circle" alt="avatar" data-classIcon="icon-plus"></a>
+                    <h6>Upload a different photo...</h6>
+
+                    <input data-buttonText="Change Avatar" type="file" class="form-control" onchange="readURL(this);" data-input="false">
+                </div>
+            </div>
+
+            <!-- edit form column -->
+            <div class="col-md-9 personal-info">
+                <div class="alert alert-info alert-dismissable">
+                    <a class="panel-close close" data-dismiss="alert">×</a>
+                    <i class="fa fa-coffee"></i>
+                    This is an <strong>.alert</strong>. Use this to show important messages to the user.
+                </div>
+                <h3>Personal info</h3>
+                @using (Html.BeginForm("Edit", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">First name:</label>
+                        <span style="display:none;">@Html.EditorFor(mode => mode.Id) @Html.EditorFor(mode => mode.avatarURL)</span>
+                        <div class="col-lg-8">
+                            @*<input class="form-control" type="text" value="Jane">*@
+                            @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Middle name:</label>
+                        <div class="col-lg-8">
+                            @*<input class="form-control" type="text" value="Jane">*@
+                            @Html.EditorFor(model => model.middleName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.middleName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Last name:</label>
+                        <div class="col-lg-8">
+                            @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Email:</label>
+                        <div class="col-lg-8">
+                            @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Address:</label>
+                        <div class="col-lg-8">
+                            @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Date Of Birth:</label>
+                        <div class="col-lg-8">
+                            @Html.EditorFor(model => model.dateOfBirdth, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.dateOfBirdth, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Username:</label>
+                        <div class="col-md-8">
+                            @Html.DisplayFor(model => model.username,new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Password:</label>
+                        <div class="col-md-8">
+                            @Html.ActionLink("Change password", "ChangePassword", "Authorization")
+                        </div >
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label"></label>
+                        <div class="col-md-8">
+                            @*@Html.ActionLink("Change password", "ChangePassword", "Authorization")*@
+                            
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <label class="col-md-3 control-label">Confirm password:</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="password" value="11111122333">
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <label class="col-md-3 control-label"></label>
+                        <div class="col-md-8">
+                            @if (Model.status == _3F.Utils.Utils.USER_STATUS.Active)
+                            {
+                                <a id="btnActiveAccount" class="btn btn-warning" onclick="ChangeActiveAccount()">Deactive Account</a>
+                            }
+                            else if (Model.status == _3F.Utils.Utils.USER_STATUS.Deactive)
+                            {
+                                <a id="btnActiveAccount" class="btn btn-warning" onclick="ChangeActiveAccount()">Active Account</a>
+                            }
+                            <input type="submit" class="btn btn-primary" value="Save Changes">
+                            <span></span>
+                            <input type="reset" class="btn btn-default" value="Cancel">
+                        </div>
+                    </div>
+            }
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    @* TrungNT Request to Controller START*@
+    <script>
+        //De-Active Account
+        function DeactiveAccount() {
+            var url = '@Url.Action("DeActive", "User")';
+            $.get(url, null, function (response) {
+                if (response == "True") {
+                    $("#btnActiveAccount").html("Active Account");
+                } else {
+                    alert('ERROR: DeactiveAccount()')
+                }
+
+            });
+        }
+
+        function ActiveAccount() {
+            var url = '@Url.Action("Active", "User")';
+            $.get(url, null, function (response) {
+                if (response == "True") {
+                    $("#btnActiveAccount").html("Deactive Account");
+                }else
+                    alert('ERROR: ActiveAccount()')
+
+            });
+        }
+
+        function ChangeActiveAccount() {
+            var status = document.getElementById('btnActiveAccount').innerText;
+            if (status === 'Active Account')
+                ActiveAccount();
+            else if (status === 'Deactive Account')
+                DeactiveAccount();
+        }
+
+        //Active Account
+
+    </script>
+
+    @* TrungNT Request to Controller END*@
+</body>
+
+
+</html>
